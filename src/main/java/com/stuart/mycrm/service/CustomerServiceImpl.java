@@ -1,15 +1,14 @@
 package com.stuart.mycrm.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.stuart.mycrm.dao.CustomerDAO;
+import com.stuart.mycrm.entity.Customer;
 import com.stuart.mycrm.record.CustomerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.stuart.mycrm.dao.CustomerDAO;
-import com.stuart.mycrm.entity.Customer;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -89,9 +88,3 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 }
-
-
-
-
-
-

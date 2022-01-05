@@ -86,22 +86,3 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 }
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.authorizeRequests()
-//                .antMatchers("/customer/showForm*").hasAnyRole(MANAGER, ADMIN)
-//                .antMatchers("/customer/save*").hasAnyRole(MANAGER, ADMIN)
-//                .antMatchers("/customer/delete").hasRole(ADMIN)
-//                .antMatchers("/customer/**").hasRole("EMPLOYEE")
-//                .antMatchers("/resources/**").permitAll()
-//                .and()
-//                .formLogin()
-//                .loginPage("/showMyLoginPage")
-//                .loginProcessingUrl("/authenticateTheUser").permitAll()
-//                .defaultSuccessUrl("/home", true)
-//                .and()
-//                // default endpoint is /logout
-//                .logout().permitAll()
-//                .and()
-//                .exceptionHandling().accessDeniedPage("/access-denied");
-//    }
