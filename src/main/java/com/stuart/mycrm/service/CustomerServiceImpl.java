@@ -2,7 +2,7 @@ package com.stuart.mycrm.service;
 
 import com.stuart.mycrm.dao.CustomerDAO;
 import com.stuart.mycrm.entity.Customer;
-import com.stuart.mycrm.record.CustomerRecord;
+import com.stuart.mycrm.dto.CustomerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +25,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public List<CustomerRecord> getCustomers() {
+    public List<CustomerDTO> getCustomers() {
         List<Customer> customers = customerDAO.getCustomers();
         if (customers != null) {
             return Converter.makeRecords(customers);
@@ -35,14 +35,16 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public void saveCustomer(final CustomerRecord customer) {
+    public void saveCustomer(CustomerDTO customer) {
+        Customer customerEntity = Converter.makeEntity(customer);
 
-        customerDAO.saveCustomer(Converter.makeEntity(customer));
+        customerDAO.saveCustomer(customerEntity);
+        customer.setId(customerEntity.getId());
     }
 
     @Override
     @Transactional
-    public CustomerRecord getCustomer(final int id) {
+    public CustomerDTO getCustomer(final int id) {
         Customer customer = customerDAO.getCustomer(id);
         if (customer != null) {
             return Converter.makeRecord(customer);
@@ -58,33 +60,33 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public List<CustomerRecord> searchCustomers(final String searchName) {
+    public List<CustomerDTO> searchCustomers(final String searchName) {
 
         return Converter.makeRecords(customerDAO.searchCustomers(searchName));
     }
 
     private static class Converter {
-        public static CustomerRecord makeRecord(Customer customer) {
-            return new CustomerRecord(customer.getId(),
+        public static CustomerDTO makeRecord(Customer customer) {
+            return new CustomerDTO(customer.getId(),
                     customer.getFirstName(),
                     customer.getLastName(),
                     customer.getEmail());
 
         }
 
-        public static List<CustomerRecord> makeRecords(List<Customer> customers) {
-            List<CustomerRecord> records = new ArrayList<>(customers.size());
+        public static List<CustomerDTO> makeRecords(List<Customer> customers) {
+            List<CustomerDTO> records = new ArrayList<>(customers.size());
             for (Customer customer : customers) {
                 records.add(makeRecord(customer));
             }
             return records;
         }
 
-        public static Customer makeEntity(CustomerRecord customer) {
-            return new Customer(customer.id(),
-                    customer.firstName(),
-                    customer.lastName(),
-                    customer.email());
+        public static Customer makeEntity(CustomerDTO customer) {
+            return new Customer(customer.getId(),
+                    customer.getFirstName(),
+                    customer.getLastName(),
+                    customer.getEmail());
         }
     }
 }

@@ -2,19 +2,18 @@ package com.stuart.mycrm.service;
 
 import java.util.List;
 
-import com.stuart.mycrm.entity.Customer;
-import com.stuart.mycrm.record.CustomerRecord;
+import com.stuart.mycrm.dto.CustomerDTO;
 
 public interface CustomerService {
 
-	List<CustomerRecord> getCustomers();
+	List<CustomerDTO> getCustomers();
 
-	void saveCustomer(final CustomerRecord customer);
+	void saveCustomer(CustomerDTO customer);
 
-	CustomerRecord getCustomer(final int theId);
+	CustomerDTO getCustomer(final int theId);
 
 	void deleteCustomer(final int theId);
 
-	List<CustomerRecord> searchCustomers(final String searchName);
+	List<CustomerDTO> searchCustomers(final String searchName);
 	
 }
