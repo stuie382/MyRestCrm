@@ -133,10 +133,4 @@ public class AppConfig implements WebMvcConfigurer {
         txManager.setSessionFactory(sessionFactory);
         return txManager;
     }
-
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/resources/**")
-//                .addResourceLocations("/resources/");
-//    }
 }

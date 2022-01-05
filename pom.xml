@@ -125,8 +125,6 @@
     <build>
         <finalName>myRestCRM</finalName>
         <plugins>
-            <!-- Builds a Web Application Archive (WAR) file from the project output
-                and its dependencies. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -139,6 +137,24 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.1.4</version>
+                <configuration>
+                    <from>
+                        <image>tomcat:9-jre17-temurin</image>
+                    </from>
+                    <to>
+                        <image>mycrmimage:latest</image>
+                    </to>
+                    <container>
+                        <ports>
+                            <port>8099</port>
+                        </ports>
+                    </container>
                 </configuration>
             </plugin>
         </plugins>

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.stuart.mycrm.record.CustomerRecord;
-import com.stuart.mycrm.utilities.EntityToRecordConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,72 +14,80 @@ import com.stuart.mycrm.entity.Customer;
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-	/**
-	 * Autowired customer DAO
-	 */
-	private final CustomerDAO customerDAO;
+    /**
+     * Autowired customer DAO
+     */
+    private final CustomerDAO customerDAO;
 
-	@Autowired
-	public CustomerServiceImpl(CustomerDAO customerDAO) {
-		this.customerDAO = customerDAO;
-	}
+    @Autowired
+    public CustomerServiceImpl(CustomerDAO customerDAO) {
+        this.customerDAO = customerDAO;
+    }
 
-	@Override
-	@Transactional
-	public List<CustomerRecord> getCustomers() {
-		return Converter.convertList(customerDAO.getCustomers());
-	}
+    @Override
+    @Transactional
+    public List<CustomerRecord> getCustomers() {
+        List<Customer> customers = customerDAO.getCustomers();
+        if (customers != null) {
+            return Converter.makeRecords(customers);
+        }
+        return null;
+    }
 
-	@Override
-	@Transactional
-	public void saveCustomer(final CustomerRecord customer) {
+    @Override
+    @Transactional
+    public void saveCustomer(final CustomerRecord customer) {
 
-		customerDAO.saveCustomer(Converter.convertOne(customer));
-	}
+        customerDAO.saveCustomer(Converter.makeEntity(customer));
+    }
 
-	@Override
-	@Transactional
-	public CustomerRecord getCustomer(final int id) {
-		return Converter.convertOne(customerDAO.getCustomer(id));
-	}
+    @Override
+    @Transactional
+    public CustomerRecord getCustomer(final int id) {
+        Customer customer = customerDAO.getCustomer(id);
+        if (customer != null) {
+            return Converter.makeRecord(customer);
+        }
+        return null;
+    }
 
-	@Override
-	@Transactional
-	public void deleteCustomer(final int id) {
-		customerDAO.deleteCustomer(id);
-	}
+    @Override
+    @Transactional
+    public void deleteCustomer(final int id) {
+        customerDAO.deleteCustomer(id);
+    }
 
-	@Override
-	@Transactional
-	public List<CustomerRecord> searchCustomers(final String searchName) {
+    @Override
+    @Transactional
+    public List<CustomerRecord> searchCustomers(final String searchName) {
 
-		return Converter.convertList(customerDAO.searchCustomers(searchName));
-	}
+        return Converter.makeRecords(customerDAO.searchCustomers(searchName));
+    }
 
-	private static class Converter {
-		public static CustomerRecord convertOne(Customer customer) {
-			return new CustomerRecord(customer.getId(),
-					customer.getFirstName(),
-					customer.getLastName(),
-					customer.getEmail());
+    private static class Converter {
+        public static CustomerRecord makeRecord(Customer customer) {
+            return new CustomerRecord(customer.getId(),
+                    customer.getFirstName(),
+                    customer.getLastName(),
+                    customer.getEmail());
 
-		}
+        }
 
-		public static List<CustomerRecord> convertList(List<Customer> customers) {
-			List<CustomerRecord> records = new ArrayList<>(customers.size());
-			for (Customer customer : customers) {
-				records.add(convertOne(customer));
-			}
-			return records;
-		}
+        public static List<CustomerRecord> makeRecords(List<Customer> customers) {
+            List<CustomerRecord> records = new ArrayList<>(customers.size());
+            for (Customer customer : customers) {
+                records.add(makeRecord(customer));
+            }
+            return records;
+        }
 
-		public static Customer convertOne(CustomerRecord customer) {
-			return new Customer(customer.id(),
-					customer.firstName(),
-					customer.lastName(),
-					customer.email());
-		}
-	}
+        public static Customer makeEntity(CustomerRecord customer) {
+            return new Customer(customer.id(),
+                    customer.firstName(),
+                    customer.lastName(),
+                    customer.email());
+        }
+    }
 }
 
 

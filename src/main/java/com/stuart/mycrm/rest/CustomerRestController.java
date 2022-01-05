@@ -13,7 +13,9 @@ import java.util.List;
 @RequestMapping("/api")
 public class CustomerRestController {
 
-    // autowire the CustomerService
+    private static final int ID_ZERO = 0;
+
+    // autowired  CustomerService
     private final CustomerService customerService;
 
     @Autowired
@@ -36,14 +38,16 @@ public class CustomerRestController {
     }
 
     @PostMapping("/customers")
-    public CustomerRecord addCustomer(@RequestBody CustomerRecord theCustomer) {
-
-        // also just in case the pass an id in JSON ... set id to 0
-        // this is force a save of new item ... instead of update
-//        theCustomer.setId(0);
-        //TODO enforce the setting of ID zero in the post customers end point call
-        customerService.saveCustomer(theCustomer);
-        return theCustomer;
+    public CustomerRecord addCustomer(@RequestBody CustomerRecord recordToAdd) {
+        // Just in case the pass an id in JSON, set id to 0
+        // this is force a save of new item, else it's an update
+        CustomerRecord sanitisedRecord = new CustomerRecord(ID_ZERO,
+                recordToAdd.firstName(),
+                recordToAdd.lastName(),
+                recordToAdd.email());
+        customerService.saveCustomer(sanitisedRecord);
+        //TODO do I want to return this without the new ID?
+        return sanitisedRecord;
     }
 
     @PutMapping("/customers")
